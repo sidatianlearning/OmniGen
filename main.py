@@ -31,7 +31,7 @@ def analysis_face(image_file):
 def info_call(face_info):
     call = ""
     if face_info["has_face"]:
-        if face_info["age"] >= 18:
+        if face_info["age"] >= 16:
             if face_info["gender"] == "F":
                 call = "woman"
             elif face_info["gender"] == "M":

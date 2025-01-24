@@ -45,8 +45,8 @@ def info_call(face_info):
 
 
 def generate_prompt(image_file1, image_file2, template):
-    template_list = ["standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "kitten", "muscles", "beach", "trophy"]
-    assert template in template_list, f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, kitten, muscles, beach, trophy)"
+    template_list = ["standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy"]
+    assert template in template_list, f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy)"
 
     info_1 = analysis_face(image_file1)
     info_2 = analysis_face(image_file2)
@@ -126,12 +126,12 @@ def generate_prompt(image_file1, image_file2, template):
                 call_2 = "little " + call_2
             prompt = "A {} and a {} are sitting together on a suspended broom. The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2, call_1, call_2)
 
-    # 猎豹: A giant kitten stood like a human, holding a small human baby in its arms. The human baby is in the <img><|image_1|></img> and the giant kitten is in the <img><|image_2|></img>.
-    elif template == "kitten":
+    # 猎豹: A woman stands with a huge cheetah. The woman is in the <img><|image_1|></img> and the cheetah is in the <img><|image_2|></img>.
+    elif template == "cheetah":
         if len(call_1) == 0:
             prompt = ""
         else:
-            prompt = "A giant kitten stood like a human, holding a small human baby in its arms. The human baby is in the <img><|image_1|></img> and the giant kitten is in the <img><|image_2|></img>."
+            prompt = "A {} stands with a huge cheetah. The {} is in the <img><|image_1|></img> and the cheetah is in the <img><|image_2|></img>.".format(call_1, call_1)
 
     # 肌肉: A man and a woman are standing together, both wearing sportswear. The man has well-developed muscles, especially the muscles on his arms, which are very large. 
     #       The woman is standing next to the man, and her muscles are also well-developed, with very large muscles on her arms. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>.
@@ -190,14 +190,14 @@ def inference_onmigen(prompt, input_images, height, width):
 
 
 if __name__ == "__main__":
-    template = "kitten"
+    template = "cheetah"
     input_images = ["./imgs/lw/facefun_muban/baozinvlang3.jpg", "./samples/kitten.jpg"]
     prompt = generate_prompt(input_images[0], input_images[1], template)
     print(prompt)
     height = 960
     width = 720
     image = inference_onmigen(prompt, input_images, height, width)
-    image.save("./imgs/lw/kitten-0124.png")
+    image.save("./imgs/lw/cheetah-0124.png")
 
     # prompt="The man and the woman are standing. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>."
     # input_images=["./imgs/test_cases/control.jpg", "./imgs/test_cases/mckenna.jpg"]

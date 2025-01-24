@@ -45,8 +45,8 @@ def info_call(face_info):
 
 
 def generate_prompt(image_file1, image_file2, template):
-    template_list = ["standing", "wedding", "graduation", "pet", "rock", "photograph"]
-    assert template in template_list, f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph)"
+    template_list = ["standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "kitten", "muscles", "beach", "trophy"]
+    assert template in template_list, f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, kitten, muscles, beach, trophy)"
 
     info_1 = analysis_face(image_file1)
     info_2 = analysis_face(image_file2)
@@ -115,6 +115,59 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = "In the photograph from an old, thin photo album, a {} and a {} are posing together. They appear jointly in this vintage collection, with the overall tone presenting a warm black-and-white color palette. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
+    # 扫帚: A little boy and a little girl are sitting together on a suspended broom. The little boy is in the <img><|image_1|></img> and the little girl is in the <img><|image_2|></img>.
+    elif template == "broom":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            if call_1 in ["boy", "girl"]:
+                call_1 = "little " + call_1
+            if call_2 in ["boy", "girl"]:
+                call_2 = "little " + call_2
+            prompt = "A {} and a {} are sitting together on a suspended broom. The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2, call_1, call_2)
+
+    # 猎豹: A giant kitten stood like a human, holding a small human baby in its arms. The human baby is in the <img><|image_1|></img> and the giant kitten is in the <img><|image_2|></img>.
+    elif template == "kitten":
+        if len(call_1) == 0:
+            prompt = ""
+        else:
+            prompt = "A giant kitten stood like a human, holding a small human baby in its arms. The human baby is in the <img><|image_1|></img> and the giant kitten is in the <img><|image_2|></img>."
+
+    # 肌肉: A man and a woman are standing together, both wearing sportswear. The man has well-developed muscles, especially the muscles on his arms, which are very large. 
+    #       The woman is standing next to the man, and her muscles are also well-developed, with very large muscles on her arms. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>.
+    elif template == "muscles":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            if info_1["gender"] == "M":
+                with_1 = "his"
+            else:
+                with_1 = "her"
+            if info_2["gender"] == "M":
+                with_2 = "his"
+            else:
+                with_2 = "her"
+            prompt = "A {} and a {} are standing together, both wearing sportswear. The {} has well-developed muscles, especially the muscles on {} arms, which are very large. ".format(call_1, call_2, call_1, with_1)
+            prompt = prompt + "The {} is standing next to the {}, and {} muscles are also well-developed, with very large muscles on {} arms. ".format(call_2, call_1, with_2, with_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 海滩: A man and a woman stood on the beach. The setting sun served as the background to illuminate them. The man embraced the woman intimately and tenderly. The scene was filled with a romantic atmosphere. 
+    #       The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>.
+    elif template == "beach":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} and a {} stood on the beach. The setting sun served as the background to illuminate them. The {} embraced the {} intimately and tenderly. The scene was filled with a romantic atmosphere. ".format(call_1, call_2, call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 奖杯: A man in a blue and white racing suit and a woman in a red and white racing suit were standing side by side, holding hands and jointly holding a grand trophy. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>.
+    elif template == "trophy":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} in a blue and white racing suit and a {} in a red and white racing suit were standing side by side, holding hands and jointly holding a grand trophy. " .format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
     return prompt
 
 def inference_onmigen(prompt, input_images, height, width):
@@ -137,14 +190,14 @@ def inference_onmigen(prompt, input_images, height, width):
 
 
 if __name__ == "__main__":
-    template = "pet"
-    input_images = ["./imgs/lw/facefun/Pet1.jpg", "./imgs/lw/facefun/Pet2.jpg"]
+    template = "kitten"
+    input_images = ["./imgs/lw/facefun_muban/baozinvlang3.jpg", "./samples/kitten.jpg"]
     prompt = generate_prompt(input_images[0], input_images[1], template)
     print(prompt)
     height = 960
     width = 720
     image = inference_onmigen(prompt, input_images, height, width)
-    image.save("./imgs/lw/Pet-0120.png")
+    image.save("./imgs/lw/kitten-0124.png")
 
     # prompt="The man and the woman are standing. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>."
     # input_images=["./imgs/test_cases/control.jpg", "./imgs/test_cases/mckenna.jpg"]

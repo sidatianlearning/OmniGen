@@ -131,7 +131,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0:
             prompt = ""
         else:
-            prompt = "A {} stands with a huge cheetah. The {} is in the <img><|image_1|></img> and the cheetah is in the <img><|image_2|></img>.".format(call_1, call_1)
+            prompt = "A full-body {} stands on the left and a huge cheetah stands on the right. The {} is in the <img><|image_1|></img> and the cheetah is in the <img><|image_2|></img>.".format(call_1, call_1)
 
     # 肌肉: A man and a woman are standing together, both wearing sportswear. The man has well-developed muscles, especially the muscles on his arms, which are very large. 
     #       The woman is standing next to the man, and her muscles are also well-developed, with very large muscles on her arms. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>.
@@ -197,7 +197,7 @@ if __name__ == "__main__":
     height = 960
     width = 720
     image = inference_onmigen(prompt, input_images, height, width)
-    image.save("./imgs/lw/cheetah-0124.png")
+    image.save("./imgs/lw/cheetah-0208.png")
 
     # prompt="The man and the woman are standing. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>."
     # input_images=["./imgs/test_cases/control.jpg", "./imgs/test_cases/mckenna.jpg"]

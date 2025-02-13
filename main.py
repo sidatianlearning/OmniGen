@@ -45,8 +45,8 @@ def info_call(face_info):
 
 
 def generate_prompt(image_file1, image_file2, template):
-    template_list = ["standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy"]
-    assert template in template_list, f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy)"
+    template_list = ["standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons", "titanic", "redcar"]
+    assert template in template_list, f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons, titanic, redcar)"
 
     info_1 = analysis_face(image_file1)
     info_2 = analysis_face(image_file2)
@@ -166,6 +166,76 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = ""
         else:
             prompt = "A {} in a blue and white racing suit and a {} in a red and white racing suit were standing side by side, holding hands and jointly holding a grand trophy. " .format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 埃及：A man and a woman stand in front of an ancient Egyptian temple, bathed in the golden sunlight.
+    #       The man is tall and strong, with long golden brown hair tied into a low ponytail, wearing a white knee-length skirt, a wide gold belt around his waist, and gold ornaments on his arms, with a majestic temperament.
+    #       The woman has black hair that reaches her shoulders, and her eyeliner outlines her mysterious charm. She wears a close-fitting white dress and a gold collar with sapphires around her neck, just like an ancient Egyptian queen. 
+    #       They stand side by side, with deep eyes, and the background is the majestic temple and pyramids. The setting sun casts afterglow, making the whole picture full of mystery and solemnity.
+    elif template == "egyptian":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} and a {} stand in front of an ancient Egyptian temple, bathed in the golden sunlight. ".format(call_1, call_2)
+            if info_1["gender"] != info_2["gender"]:
+                prompt = prompt + "The man is tall and strong, with long golden brown hair tied into a low ponytail, wearing a white knee-length skirt, a wide gold belt around his waist, and gold ornaments on his arms, with a majestic temperament. "
+                prompt = prompt + "The woman has black hair that reaches her shoulders, and her eyeliner outlines her mysterious charm. She wears a close-fitting white dress and a gold collar with sapphires around her neck, just like an ancient Egyptian queen. "
+            else:
+                if info_1["gender"] == "M":
+                    with_ = "his"
+                else:
+                    with_ = "her"
+                prompt = prompt + "The {} is tall and strong, with long golden brown hair tied into a low ponytail, wearing a white knee-length skirt, a wide gold belt around {} waist, and gold ornaments on {} arms, with a majestic temperament. ".format(call_1, with_, with_)
+                prompt = prompt + "The {} has black hair that reaches {} shoulders, and {} eyeliner outlines {} mysterious charm. She wears a close-fitting white dress and a gold collar with sapphires around {} neck, just like an ancient Egyptian queen. ".format(call_2, with_, with_, with_, with_)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 气球：In this painting, a couple is exuding a sweet affection. The man is embracing the woman in his strong arms. They are smiling towards the camera, and around them are a large bouquet of heart-shaped balloons.
+    #       The background features an outdoor wooden walkway and the Eiffel Tower. The entire scene exudes a romantic and warm atmosphere.
+    elif template == "balloons":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "In this painting, a couple is exuding a sweet affection. "
+            if info_1["gender"] != info_2["gender"]:
+                prompt = prompt + "The man is embracing the woman in his strong arms. "
+            else:
+                if info_1["gender"] == "M":
+                    with_ = "his"
+                else:
+                    with_ = "her"
+                prompt = prompt + "The {} is embracing the {} in {} strong arms. ".format(call_1, call_2, with_)
+            prompt = prompt + "They are smiling towards the camera, and around them are a large bouquet of heart-shaped balloons. The background features an outdoor wooden walkway and the Eiffel Tower. The entire scene exudes a romantic and warm atmosphere. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 泰坦：A couple stood at the bow of the ship, imitating the classic flying posture of the Titanic. The woman was in the front, her arms spread wide, her head slightly raised, her eyes closed, feeling the sea breeze blowing towards her, with a relaxed and excited smile on her lips.
+    #       Her long hair was fluttering in the wind, and her skirt was gently lifted. The man stood behind her, gently wrapping his arms around her waist, with a smile on his lips. 
+    #       Behind them, the waves were surging and crashing, the setting sun tinted the sky with warm golden red, the ship was moving slowly, and the sea breeze blew over the two of them, carrying the scent of the sea.
+    elif template == "titanic":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A couple stood at the bow of the ship, imitating the classic flying posture of the Titanic. "
+            if info_1["gender"] != info_2["gender"]:
+                prompt = prompt + "The woman was in the front, her arms spread wide, her head slightly raised, her eyes closed, feeling the sea breeze blowing towards her, with a relaxed and excited smile on her lips. Her long hair was fluttering in the wind, and her skirt was gently lifted. "
+                prompt = prompt + "The man stood behind her, gently wrapping his arms around her waist, with a smile on his lips. "
+            else:
+                if info_1["gender"] == "M":
+                    with_ = "his"
+                else:
+                    with_ = "her"
+                prompt = prompt + "The {} was in the front, {} arms spread wide, {} head slightly raised, {} eyes closed, feeling the sea breeze blowing towards her, with a relaxed and excited smile on {} lips. {} long hair was fluttering in the wind, and {} skirt was gently lifted. ".format(call_1, with_, with_, with_, with_, with_, with_)
+                prompt = prompt + "The {} stood behind her, gently wrapping {} arms around {} waist, with a smile on {} lips. ".format(call_2, with_, with_, with_)
+            prompt = prompt + "Behind them, the waves were surging and crashing, the setting sun tinted the sky with warm golden red, the ship was moving slowly, and the sea breeze blew over the two of them, carrying the scent of the sea."
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 红色跑车：The man and the woman stood together, smiling towards the camera. The background was a serene outdoor scene, with a vintage red sports car behind them, neatly trimmed green plants and a white fence. 
+    #           The sunlight poured in, creating a warm and romantic atmosphere. The overall picture exuded the charm of retro style and the sweet atmosphere of love.
+    elif template == "redcar"
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "The {} and the {} stood together, smiling towards the camera. The background was a serene outdoor scene, with a vintage red sports car behind them, neatly trimmed green plants and a white fence. ".format(call_1, call_2)
+            prompt = prompt + "The sunlight poured in, creating a warm and romantic atmosphere. The overall picture exuded the charm of retro style and the sweet atmosphere of love. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     return prompt

@@ -45,8 +45,10 @@ def info_call(face_info):
 
 
 def generate_prompt(image_file1, image_file2, template):
-    template_list = ["standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons", "titanic", "redcar"]
-    assert template in template_list, f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons, titanic, redcar)"
+    template_list = [
+        "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons", "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo"]
+    assert template in template_list,\
+        f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons, titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo)"
 
     info_1 = analysis_face(image_file1)
     info_2 = analysis_face(image_file2)
@@ -230,7 +232,7 @@ def generate_prompt(image_file1, image_file2, template):
 
     # 红色跑车：The man and the woman stood together, smiling towards the camera. The background was a serene outdoor scene, with a vintage red sports car behind them, neatly trimmed green plants and a white fence. 
     #           The sunlight poured in, creating a warm and romantic atmosphere. The overall picture exuded the charm of retro style and the sweet atmosphere of love.
-    elif template == "redcar"
+    elif template == "redcar":
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
@@ -238,6 +240,73 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = prompt + "The sunlight poured in, creating a warm and romantic atmosphere. The overall picture exuded the charm of retro style and the sweet atmosphere of love. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
+    # 巴西狂欢节：The woman is wearing a large yellow feather headdress with colorful parts, which makes her look very eye-catching and she has a bright smile. 
+    #               She is wearing a tight blue and yellow outfit with a lot of feathers and sequins on the chest and cuffs, and the skirt below the waist is also rich in color and decorative details. 
+    #               The man is wearing a colorful and distinctive outfit. He wears a large red feather headdress with gold decorations. 
+    #               The shoulders and arms are decorated with a lot of red and orange feathers, forming an exaggerated shape. He is naked from the waist, showing his strong muscles, and his lower body is decorated with red and gold clothes, also decorated with feathers. 
+    #               The overall outfit may be used for carnival or similar festivals. In the background, a street and some people can be seen, which is full of joyful atmosphere. This kind of dress is common in Latin American carnival and other festivals.
+    elif template == "brazil":
+        if len(call_1) == 0 or len(call_2) == 0 or info_1["gender"] == info_2["gender"]:
+            prompt = ""
+        else:
+            prompt = "The woman is wearing a large yellow feather headdress with colorful parts, which makes her look very eye-catching and she has a bright smile. "
+            prompt = prompt + "She is wearing a tight blue and yellow outfit with a lot of feathers and sequins on the chest and cuffs, and the skirt below the waist is also rich in color and decorative details. "
+            prompt = prompt + "The man is wearing a colorful and distinctive outfit. He wears a large red feather headdress with gold decorations. "
+            prompt = prompt + "The shoulders and arms are decorated with a lot of red and orange feathers, forming an exaggerated shape. He is naked from the waist, showing his strong muscles, and his lower body is decorated with red and gold clothes, also decorated with feathers. "
+            prompt = prompt + "The overall outfit may be used for carnival or similar festivals. In the background, a street and some people can be seen, which is full of joyful atmosphere. This kind of dress is common in Latin American carnival and other festivals. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 华尔街：The woman and the man stood together, behind them was a huge floor-to-ceiling window, and outside the window were skyscrapers with neon lights twinkling.
+    elif template == "wallstreet":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "The {} and the {} stood together, behind them was a huge floor-to-ceiling window, and outside the window were skyscrapers with neon lights twinkling. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 敞篷车：A man and a woman were sitting in a red sports car.
+    elif template == "convertible":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} and a {} were sitting in a red sports car. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 医生：A man and a woman, both wearing white coats and with a stethoscope around their necks, stood inside a hospital.
+    elif template == "doctor":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} and a {}, both wearing white coats and with a stethoscope around their necks, stood inside a hospital. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 雨中：Men and women stood on a street, the rain pouring down on them, their clothes soaked.
+    elif template == "rain":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "The {} and the {} stood on a street, the rain pouring down on them, their clothes soaked. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 骑马：A woman is riding a horse.
+    elif template == "horse":
+        if len(call_1) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} is riding a horse. The {} is in the <img><|image_1|></img> and the horse is in the <img><|image_2|></img>.".format(call_1, call_1)
+
+    # 袋鼠：A man wearing boxing gloves was standing on the boxing ring. Next to him was a kangaroo. The kangaroo had very well-developed muscles. Many people on the audience stand behind were waiting for this exciting match.
+    elif template == "kangaroo":
+        if len(call_1) == 0:
+            prompt = ""
+        else:
+            if info_1["gender"] == "M":
+                with_1 = "him"
+            else:
+                with_1 = "her"
+            prompt = "A {} wearing boxing gloves was standing on the boxing ring. Next to {} was a kangaroo. The kangaroo had very well-developed muscles. ".format(call_1, with_1)
+            prompt = prompt + "Many people on the audience stand behind were waiting for this exciting match. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the kangaroo is in the <img><|image_2|></img>.".format(call_1)
     return prompt
 
 def inference_onmigen(prompt, input_images, height, width):
@@ -260,18 +329,20 @@ def inference_onmigen(prompt, input_images, height, width):
 
 
 if __name__ == "__main__":
-    template = "cheetah"
-    input_images = ["./imgs/lw/facefun_muban/baozinvlang3.jpg", "./samples/kitten.jpg"]
+    template = "horse"
+    input_images = ["./imgs/lw/facefun_muban/baozinvlang3.jpg", "./samples/horse.jpg"]
     prompt = generate_prompt(input_images[0], input_images[1], template)
     print(prompt)
     height = 960
     width = 720
     image = inference_onmigen(prompt, input_images, height, width)
-    image.save("./imgs/lw/cheetah-0208.png")
+    image.save("./imgs/sidatian/horse-0220.png")
 
-    # prompt="The man and the woman are standing. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>."
-    # input_images=["./imgs/test_cases/control.jpg", "./imgs/test_cases/mckenna.jpg"]
-    # height = 800
-    # width = 600
-    # image = inference_onmigen(prompt, input_images, height, width)
-    # image.save("test.png")
+    template = "kangaroo"
+    input_images = ["./imgs/lw/facefun_muban/baozinvlang3.jpg", "./samples/kangaroo.jpg"]
+    prompt = generate_prompt(input_images[0], input_images[1], template)
+    print(prompt)
+    height = 960
+    width = 720
+    image = inference_onmigen(prompt, input_images, height, width)
+    image.save("./imgs/sidatian/kangaroo-0220.png")

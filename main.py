@@ -46,9 +46,11 @@ def info_call(face_info):
 
 def generate_prompt(image_file1, image_file2, template):
     template_list = [
-        "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons", "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo"]
+        "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
+        "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed"]
     assert template in template_list,\
-        f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons, titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo)"
+        f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons," \
+        "titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed)"
 
     info_1 = analysis_face(image_file1)
     info_2 = analysis_face(image_file2)
@@ -307,6 +309,52 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = "A {} wearing boxing gloves was standing on the boxing ring. Next to {} was a kangaroo. The kangaroo had very well-developed muscles. ".format(call_1, with_1)
             prompt = prompt + "Many people on the audience stand behind were waiting for this exciting match. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the kangaroo is in the <img><|image_2|></img>.".format(call_1)
+
+    # 埃菲尔铁塔：A man and a woman stood together under the Eiffel Tower and the cherry blossom trees.
+    elif template == "eiffeltower":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} and a {} stood together under the Eiffel Tower and the cherry blossom trees. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 壁咚：The man and the woman are standing together. There is a wall beside the woman.
+    elif template == "wall":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "The {} and the {} are standing together. ".format(call_1, call_2)
+            if info_1["gender"] == "M" and info_2["gender"] == "M":
+                prompt = prompt + "There is a wall beside the {}. " .format(call_1)
+            else:
+                prompt = prompt + "There is a wall beside the woman. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 怀孕：The woman is pregnant and the man is standing beside her.
+    elif template == "pregnant":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        elif info_1["gender"] == info_2["gender"]:
+            prompt = ""
+        else:
+            prompt = "The woman is pregnant and the man is standing beside her. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 海底：This is a photo taken from the seabed. A couple of people are in the blue underwater world. The man is gently embracing the woman.
+    #       Around them, some beautiful dolphins are swimming gracefully, and various kinds of small fish are darting and swimming among the coral reefs.
+    #       The bubbles rising from the bottom of the water add a sense of movement to the picture.
+    elif template == "seabed":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "This is a photo taken from the seabed. A couple of people are in the blue underwater world. "
+            if info_1["gender"] == info_2["gender"]:
+                prompt = prompt + "The {} is gently embracing the {}. ".format(call_1, call_2)
+            else:
+                prompt = prompt + "The man is gently embracing the woman. "
+            prompt = prompt + "Around them, some beautiful dolphins are swimming gracefully, and various kinds of small fish are darting and swimming among the coral reefs. "
+            prompt = prompt + "The bubbles rising from the bottom of the water add a sense of movement to the picture. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
     return prompt
 
 def inference_onmigen(prompt, input_images, height, width):

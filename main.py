@@ -47,10 +47,10 @@ def info_call(face_info):
 def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
-        "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed"]
+        "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone"]
     assert template in template_list,\
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons," \
-        "titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed)"
+        "titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone)"
 
     info_1 = analysis_face(image_file1)
     info_2 = analysis_face(image_file2)
@@ -355,6 +355,30 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = prompt + "Around them, some beautiful dolphins are swimming gracefully, and various kinds of small fish are darting and swimming among the coral reefs. "
             prompt = prompt + "The bubbles rising from the bottom of the water add a sense of movement to the picture. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 母亲：Two women stand together, with the background being the blue sky and white clouds outside.
+    elif template == "mother":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} and a {} stand together, with the background being the blue sky and white clouds outside. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 礼物：A man and a woman stand together.
+    elif template == "gift":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} and a {} stand together. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 麦克风：A woman was standing on a podium, with a microphone in front of her.
+    elif template == "microphone":
+        if len(call_1) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} was standing on a podium, with a microphone in front of her. ".format(call_1)
+            prompt = prompt + "The {} is in the <img><|image_1|></img>.".format(call_1)
     return prompt
 
 def inference_onmigen(prompt, input_images, height, width):

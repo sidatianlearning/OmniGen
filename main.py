@@ -48,9 +48,10 @@ def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
         "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone"]
-    assert template in template_list,\
-        f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons," \
-        "titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone)"
+    assert template in template_list, (
+        f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
+        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone)"
+    )
 
     info_1 = analysis_face(image_file1)
     info_2 = analysis_face(image_file2)
@@ -381,6 +382,148 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = prompt + "The {} is in the <img><|image_1|></img>.".format(call_1)
     return prompt
 
+
+def generate_prompts_styleme(image_file, template):
+    template_list = ["identification", "workplace", "exotic"]
+    assert template in template_list, f"template {template} not in template_list (identification, workplace, exotic)"
+
+    info = analysis_face(image_file)
+    call = info_call(info)
+    if info["gender"] == "M":
+        pronoun = "He"
+        possessive = "his"
+        with_ = "him"
+    else:
+        pronoun = "She"
+        possessive = "her"
+        with_ = "her"
+
+    prompts = []
+    if len(call) == 0:
+        return prompts
+
+    # 证件照
+    # A person is wearing a formal white shirt and a red checked tie. He is smiling at the camera with his hands naturally hanging down. The background color is dark blue.
+    # A person is wearing a formal set of dark purple suit and a white polka-dot tie, smiling at the camera. The background color is dark gray.
+    # A person is wearing a short-sleeved shirt and a blue tie, smiling at the camera. The background is in a light grey tone.
+    # A person is wearing a formal black suit and a blue tie, smiling at the camera. The background is in a dark grey tone.
+    if template == "identification":
+        prompt = f"A {call} is wearing a formal white shirt and a red checked tie. {pronoun} is smiling at the camera with his hands naturally hanging down. The background color is dark blue. The {call} is in the <img><|image_1|></img>."
+        prompts.append(prompt)
+        prompt = f"A {call} is wearing a formal set of dark purple suit and a white polka-dot tie, smiling at the camera. The background color is dark gray. The {call} is in the <img><|image_1|></img>."
+        prompts.append(prompt)
+        prompt = f"A {call} is wearing a short-sleeved shirt and a blue tie, smiling at the camera. The background is in a light grey tone. The {call} is in the <img><|image_1|></img>."
+        prompts.append(prompt)
+        prompt = f"A {call} is wearing a formal black suit and a blue tie, smiling at the camera. The background is in a dark grey tone. The {call} is in the <img><|image_1|></img>."
+        prompts.append(prompt)
+
+    # 职场照
+    # A person is dressed in a dark grey suit, paired with a white shirt. Standing in front of the glass window, the background shows the tall buildings of the city. He slightly leans to the side, with a confident and concentrated expression, and his hands are crossed over his chest.
+    # A person is sitting at the conference table, dressed in a black business suit and wearing a simple white shirt. He is holding a document in his hand and his gaze is firm and directed forward. The background is a bright modern conference room.
+    # A person is standing with his arms crossed in a dark blue double-breasted suit, wearing a black shirt underneath. The background is a wooden bookshelf with books and green plants placed on it.
+    # A person is sitting on a black office chair in a light khaki suit. One hand is placed on a notebook, and a laptop is placed in front of him/her. The background is blue blinds.
+    elif template == "workplace":
+        prompt = (
+            f"A {call} is dressed in a dark grey suit, paired with a white shirt. Standing in front of the glass window, the background shows the tall buildings of the city. "
+            f"{pronoun} slightly leans to the side, with a confident and concentrated expression, and {possessive} hands are crossed over {possessive} chest. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"A {call} is sitting at the conference table, dressed in a black business suit and wearing a simple white shirt. "
+            f"{pronoun} is holding a document in {possessive} hand and {possessive} gaze is firm and directed forward. The background is a bright modern conference room. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"A {call} is standing with {possessive} arms crossed in a dark blue double-breasted suit, wearing a black shirt underneath. The background is a wooden bookshelf with books and green plants placed on it. "
+            f"The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"A {call} is sitting on a black office chair in a light khaki suit. One hand is placed on a notebook, and a laptop is placed in front of {with_}. The background is blue blinds."
+            f"The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+
+    # 异域风情
+    # 女1：The woman is dressed in a light brown robe, with a belt featuring golden round buckles around her waist. She wears a delicate gold necklace around her neck, brown wristbands wrapped around her wrists, and a hood of the same color on her head. 
+    #       Beside her is a large camel, and in the background is a desert, with two stone statues of a similar ancient Egyptian style behind her.
+    # 女2：The woman wore a magnificent headband on her head and her hair was braided. She was dressed in golden attire with intricate patterns and decorations on it, complemented by a wide golden belt and multiple layers of necklaces. 
+    #       She wore arm rings on her arms. She was sitting on a chair, her eyes deep-set, presenting an overall image of nobility and mystery. Beside her was a white-gold tiger, and the background was magnificent.
+    # 女3：A woman is gracefully standing by the seaside, dressed in a short, exotic jacket with intricate golden embroidery along the collar, adding a touch of regal charm to her look. 
+    #       The jacket’s design is simple yet rich with cultural details, exuding an air of luxury and refinement. Her lower body is adorned with a flowing, beige skirt that moves with the breeze, and a wide belt decorated with unique patterns that cinches at her waist, accentuating her figure. 
+    #       In her hand, she holds a majestic white horse, its pure coat glowing against the backdrop of the ocean. The scene captures her elegance and strength, with her attire reflecting a blend of exotic beauty and grace.
+    # 女4：The woman wore large golden earrings and a thick necklace. Her body was glittering with golden sequins. She leaned against a black panther. The panther had sharp eyes and its yellow eyes were very striking. The background was water surface.
+    # 男1：The man is wearing a light brown robe with a belt with a round gold buckle around his waist. The design of the robe is simple yet elegant. He wears an exquisite gold necklace around his neck and a few brown leather bracelets around his wrists, adding a sense of strength. 
+    #       He wears a hood of the same color as his robe on his head, which droops gently, revealing a pair of deep eyes and a resolute face. He stands next to a tall camel, whose hair is a warm brown, giving him a calm temperament. 
+    #       The background is a vast desert with some hard stones scattered on the ground, and in the distance there are two ancient stone statues, which seem to be derived from the ancient Egyptian style, mysterious and solemn. 
+    #       The whole scene creates a mysterious and magnificent atmosphere. The man's posture is steady and calm, exuding a unique charm that blends with nature and history.
+    # 男2：The man wore a gorgeous crown, and his hair was carefully braided into fine braids, showing a kingly majesty. He was dressed in a golden suit, with intricate and exquisite patterns and decorations carved on it. 
+    #       The golden fabric shone with a luxurious luster under the light, and a wide golden belt was tied around his waist, adding a sense of solemnity. He wore several layers of gorgeous gold necklaces on his neck, each of which was unique and emitted a faint metallic glow, highlighting his noble status. 
+    #       He wore heavy arm rings on his arms, with a simple and exquisite design, as if carrying a long history and power.
+    # 男3：The man stands by the sea, dressed in an exotic, short jacket adorned with intricate golden embroidery along the collar. The jacket’s simple cut contrasts with the ornate detailing, creating a unique blend of sophistication and understated luxury. 
+    #       The golden collar adds a regal touch, elevating the overall look. He wears flowing beige trousers, their hems slightly grazing the ground, and a wide, intricately patterned belt that cinches at his waist. 
+    #       The belt’s design is both simple and layered, enhancing his figure while maintaining an elegant balance.
+    # 男4：The man is wearing a dark robe with exquisite patterns and intricate designs. The colors are deep and layered, showing a noble and mysterious atmosphere. The collar is low, revealing a delicate collarbone, and the hem of the robe is wide and elegantly draped to the ground. 
+    #       A gorgeous belt with exquisite decorations is tied around his waist, highlighting his elegance and strength. The cuffs are wide and decorated with exquisite embroidery patterns, which flutter gently in the breeze, adding a sense of movement.
+    elif template == "exotic":
+        if info["gender"] == "M":
+            prompt = (
+                f"The man is wearing a light brown robe with a belt with a round gold buckle around his waist. "
+                f"The design of the robe is simple yet elegant. He wears an exquisite gold necklace around his neck and a few brown leather bracelets around his wrists, adding a sense of strength. "
+                f"He wears a hood of the same color as his robe on his head, which droops gently, revealing a pair of deep eyes and a resolute face. He stands next to a tall camel, whose hair is a warm brown, giving him a calm temperament. "
+                f"The background is a vast desert with some hard stones scattered on the ground, and in the distance there are two ancient stone statues, which seem to be derived from the ancient Egyptian style, mysterious and solemn. "
+                f"The whole scene creates a mysterious and magnificent atmosphere. The man's posture is steady and calm, exuding a unique charm that blends with nature and history. "
+                f"The man is in the <img><|image_1|></img>."
+            )
+            prompts.append(prompt)
+            prompt = (
+                f"The man wore a gorgeous crown, and his hair was carefully braided into fine braids, showing a kingly majesty. He was dressed in a golden suit, with intricate and exquisite patterns and decorations carved on it. "
+                f"The golden fabric shone with a luxurious luster under the light, and a wide golden belt was tied around his waist, adding a sense of solemnity. "
+                f"He wore several layers of gorgeous gold necklaces on his neck, each of which was unique and emitted a faint metallic glow, highlighting his noble status. "
+                f"He wore heavy arm rings on his arms, with a simple and exquisite design, as if carrying a long history and power. "
+                f"The man is in the <img><|image_1|></img>."
+            )
+            prompts.append(prompt)
+            prompt = (
+                f"The man stands by the sea, dressed in an exotic, short jacket adorned with intricate golden embroidery along the collar. The jacket's simple cut contrasts with the ornate detailing, creating a unique blend of sophistication and understated luxury. "
+                f"The golden collar adds a regal touch, elevating the overall look. He wears flowing beige trousers, their hems slightly grazing the ground, and a wide, intricately patterned belt that cinches at his waist. "
+                f"The belt's design is both simple and layered, enhancing his figure while maintaining an elegant balance. "
+                f"The man is in the <img><|image_1|></img>."
+            )
+            prompts.append(prompt)
+            prompt = (
+                f"The man is wearing a dark robe with exquisite patterns and intricate designs. The colors are deep and layered, showing a noble and mysterious atmosphere. The collar is low, revealing a delicate collarbone, and the hem of the robe is wide and elegantly draped to the ground. "
+                f"A gorgeous belt with exquisite decorations is tied around his waist, highlighting his elegance and strength. The cuffs are wide and decorated with exquisite embroidery patterns, which flutter gently in the breeze, adding a sense of movement. "
+                f"The man is in the <img><|image_1|></img>."
+            )
+            prompts.append(prompt)
+        else:
+            prompt = (
+                f"The woman is dressed in a light brown robe, with a belt featuring golden round buckles around her waist. She wears a delicate gold necklace around her neck, brown wristbands wrapped around her wrists, and a hood of the same color on her head. "
+                f"Beside her is a large camel, and in the background is a desert, with two stone statues of a similar ancient Egyptian style behind her. "
+                f"The woman is in the <img><|image_1|></img>."
+            )
+            prompts.append(prompt)
+            prompt = (
+                f"The woman wore a magnificent headband on her head and her hair was braided. She was dressed in golden attire with intricate patterns and decorations on it, complemented by a wide golden belt and multiple layers of necklaces. "
+                f"She wore arm rings on her arms. She was sitting on a chair, her eyes deep-set, presenting an overall image of nobility and mystery. Beside her was a white-gold tiger, and the background was magnificent. "
+                f"The woman is in the <img><|image_1|></img>."
+            )
+            prompts.append(prompt)
+            prompt = (
+                f"A woman is gracefully standing by the seaside, dressed in a short, exotic jacket with intricate golden embroidery along the collar, adding a touch of regal charm to her look. "
+                f"The jacket's design is simple yet rich with cultural details, exuding an air of luxury and refinement. Her lower body is adorned with a flowing, beige skirt that moves with the breeze, and a wide belt decorated with unique patterns that cinches at her waist, accentuating her figure. "
+                f"In her hand, she holds a majestic white horse, its pure coat glowing against the backdrop of the ocean. The scene captures her elegance and strength, with her attire reflecting a blend of exotic beauty and grace. "
+                f"The woman is in the <img><|image_1|></img>."
+            )
+            prompts.append(prompt)
+            prompt = (
+                f"The woman wore large golden earrings and a thick necklace. Her body was glittering with golden sequins. She leaned against a black panther. The panther had sharp eyes and its yellow eyes were very striking. The background was water surface. "
+                f"The woman is in the <img><|image_1|></img>."
+            )
+            prompts.append(prompt)
+    return prompts
+
 def inference_onmigen(prompt, input_images, height, width):
     images = pipe(
         prompt=prompt,
@@ -418,3 +561,13 @@ if __name__ == "__main__":
     width = 720
     image = inference_onmigen(prompt, input_images, height, width)
     image.save("./imgs/sidatian/kangaroo-0220.png")
+
+    template = "exotic"
+    image_file = "./imgs/lw/styleme-0310/8.png"
+    height = 960
+    width = 720
+    prompts = generate_prompts_styleme(image_file, template)
+    for index, prompt in enumerate(prompts):
+        print(prompt)
+        image = inference_onmigen(prompt, [image_file], height, width)
+        image.save(f"./imgs/sidatian/styleme-0312-{index}.png")

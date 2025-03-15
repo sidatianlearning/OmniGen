@@ -2,6 +2,7 @@ from OmniGen import OmniGenPipeline
 import cv2
 import insightface
 import numpy as np
+import os
 from insightface.app import FaceAnalysis
 from PIL import Image
 
@@ -15,16 +16,21 @@ print("loading Success")
 
 
 def analysis_face(image_file):
-    pil_image = Image.open(image_file).convert("RGB")
-    np_image = np.array(pil_image)
-    cv_image = cv2.cvtColor(np_image, cv2.COLOR_RGB2BGR)
-    faces = app.get(cv_image)
-    if len(faces) == 0:
+    if len(image_file) == 0:
+        face_info = {"has_face": False, "gender": "", "age": -1}
+    elif not os.path.isfile(image_file):
         face_info = {"has_face": False, "gender": "", "age": -1}
     else:
-        faces = sorted(faces, key=lambda x: abs((x.bbox[2] - x.bbox[0]) * (x.bbox[3] - x.bbox[1])), reverse=True)
-        face = faces[0]
-        face_info = {"has_face": True, "gender": face.sex, "age": face.age}
+        pil_image = Image.open(image_file).convert("RGB")
+        np_image = np.array(pil_image)
+        cv_image = cv2.cvtColor(np_image, cv2.COLOR_RGB2BGR)
+        faces = app.get(cv_image)
+        if len(faces) == 0:
+            face_info = {"has_face": False, "gender": "", "age": -1}
+        else:
+            faces = sorted(faces, key=lambda x: abs((x.bbox[2] - x.bbox[0]) * (x.bbox[3] - x.bbox[1])), reverse=True)
+            face = faces[0]
+            face_info = {"has_face": True, "gender": face.sex, "age": face.age}
     return face_info
 
 
@@ -47,10 +53,11 @@ def info_call(face_info):
 def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
-        "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone"]
+        "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone",
+        "elephant", "cartoon", "lizard"]
     assert template in template_list, (
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
-        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone)"
+        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, cartoon, lizard)"
     )
 
     info_1 = analysis_face(image_file1)
@@ -380,7 +387,53 @@ def generate_prompt(image_file1, image_file2, template):
         else:
             prompt = "A {} was standing on a podium, with a microphone in front of her. ".format(call_1)
             prompt = prompt + "The {} is in the <img><|image_1|></img>.".format(call_1)
+
+    # 大象：A person riding an elephant。
+    elif template == "elephant":
+        if len(call_1) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} riding an elephant. ".format(call_1)
+            prompt = prompt + "The {} is in the <img><|image_1|></img>.".format(call_1)
+
+    # 卡通：This person has been transformed into a cartoon style.
+    elif template == "cartoon":
+        if len(call_1) == 0:
+            prompt = ""
+        else:
+            prompt = "This {} has been transformed into a cartoon style. ".format(call_1)
+            prompt = prompt + "The {} is in the <img><|image_1|></img>.".format(call_1)
+
+    # 蜥蜴：This person is standing on the African savannah, holding a huge and brightly-colored lizard in his arms.
+    elif template == "lizard":
+        if len(call_1) == 0:
+            prompt = ""
+        else:
+            prompt = "This {} is standing on the African savannah, holding a huge and brightly-colored lizard in his arms. ".format(call_1)
+            prompt = prompt + "The {} is in the <img><|image_1|></img>.".format(call_1)
     return prompt
+
+def generate_prompt_for_3(image_file1, image_file2, image_file3, template):
+    template_list = ["photo"]
+    assert template in template_list, f"template {template} not in template_list(photo)"
+
+    info_1 = analysis_face(image_file1)
+    info_2 = analysis_face(image_file2)
+    info_3 = analysis_face(image_file3)
+    call_1 = info_call(info_1)
+    call_2 = info_call(info_2)
+    call_3 = info_call(info_3)
+
+    if template == "photo":
+        if len(call_1) == 0 or len(call_2) == 0 or len(call_3) == 0:
+            prompt = ""
+        elif info_1["gender"] != "M" or info_2["gender"] != "F" or info_3["gender"] != "F":
+            prompt = ""
+        else:
+            prompt = "Three people are posing for a group photo. The man is standing in the middle, holding the two women in his arms. "
+            prompt = prompt + "The man is in the <img><|image_1|></img>, the left woman is in the <img><|image_2|></img>, and the right woman is in the <img><|image_3|></img>."
+    return prompt
+
 
 
 def generate_prompts_styleme(image_file, template):
@@ -561,6 +614,24 @@ if __name__ == "__main__":
     width = 720
     image = inference_onmigen(prompt, input_images, height, width)
     image.save("./imgs/sidatian/kangaroo-0220.png")
+
+    template = "elephant"
+    input_images = ["./imgs/lw/facefun_muban/baozinvlang3.jpg"]
+    prompt = generate_prompt(input_images[0], "", template)
+    print(prompt)
+    height = 960
+    width = 720
+    image = inference_onmigen(prompt, input_images, height, width)
+    image.save("./imgs/sidatian/elephant-0315.png")
+
+    template = "photo"
+    input_images = ["./imgs/lw/facefun-0313/1.png", "./imgs/lw/facefun-0313/4.jpg", "./imgs/lw/facefun-0313/6.jpg"]
+    prompt = generate_prompt_for_3(input_images[0], input_images[1], input_images[2], template)
+    print(prompt)
+    height = 960
+    width = 720
+    image = inference_onmigen(prompt, input_images, height, width)
+    image.save("./imgs/sidatian/photo-0315.png")
 
     template = "exotic"
     image_file = "./imgs/lw/styleme-0310/8.png"

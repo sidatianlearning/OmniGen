@@ -77,7 +77,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} and a {} are standing together. The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2, call_1, call_2)
+            prompt = "A {} stands on the left and a {} stands on the right. The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2, call_1, call_2)
 
     # 拍婚纱照: The couple stands together for their wedding photos, with the man dressed in a formal three-piece suit and tie, and the woman wearing an elaborate wedding gown with a white veil on her head.
     #           The woman is in the <img><|image_1|></img> and the man is in the <img><|image_2|></img>.
@@ -86,10 +86,10 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = ""
         else:
             if info_1["gender"] != info_2["gender"]:
-                dress = "with the man dressed in a formal three-piece suit and tie, and the woman wearing an elaborate wedding gown with a white veil on her head."
+                dress = "with the man dressed in a formal three-piece suit and tie, and the woman wearing an elaborate wedding gown with a white veil on her head"
             else:
-                dress = "with the {} dressed in a formal three-piece suit and tie, and the {} wearing an elaborate wedding gown with a white veil on her head.".format(call_1, call_2)
-            prompt = "The couple stands together for their wedding photos, {}. The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(dress, call_1, call_2)
+                dress = "with the {} dressed in a formal three-piece suit and tie, and the {} wearing an elaborate wedding gown with a white veil on her head".format(call_1, call_2)
+            prompt = "The {} stands on the left and the {} stands on the right for their wedding photos, {}. The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2, dress, call_1, call_2)
 
     # 学士服合影: In the picture, a man and a woman are posing for graduation photos, both dressed in graduation attire.
     #             The woman is wearing a black academic gown, a mortarboard, and holds a diploma in her hand. Similarly, the man is also dressed in a black academic gown and wearing a mortarboard.
@@ -98,7 +98,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "In the picture, a {} and a {} are posing for graduation photos, both dressed in graduation attire. ".format(call_1, call_2)
+            prompt = "In the picture, a {} on the left and a {} on the right are posing for graduation photos, both dressed in graduation attire. ".format(call_1, call_2)
             prompt = prompt + "The {} is wearing a black academic gown, a mortarboard, and holds a diploma in her hand. Similarly, the {} is also dressed in a black academic gown and wearing a mortarboard. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
@@ -115,7 +115,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} and a {} are performing rock music on stage. The {} is holding a wooden guitar, while the {} plays a sleek, stylish guitar. Behind them is the stage setting. ".format(call_1, call_2, call_1, call_2)
+            prompt = "A {} on the left and a {} on the right are performing rock music on stage. The {} is holding a wooden guitar, while the {} plays a sleek, stylish guitar. Behind them is the stage setting. ".format(call_1, call_2, call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 老照片合影: In the photograph from an old, thin photo album, a woman and a man are posing together. They appear jointly in this vintage collection, with the overall tone presenting a warm black-and-white color palette.
@@ -124,7 +124,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "In the photograph from an old, thin photo album, a {} and a {} are posing together. They appear jointly in this vintage collection, with the overall tone presenting a warm black-and-white color palette. ".format(call_1, call_2)
+            prompt = "In the photograph from an old, thin photo album, a {} on the left and a {} on the right are posing together. They appear jointly in this vintage collection, with the overall tone presenting a warm black-and-white color palette. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 扫帚: A little boy and a little girl are sitting together on a suspended broom. The little boy is in the <img><|image_1|></img> and the little girl is in the <img><|image_2|></img>.
@@ -159,7 +159,7 @@ def generate_prompt(image_file1, image_file2, template):
                 with_2 = "his"
             else:
                 with_2 = "her"
-            prompt = "A {} and a {} are standing together, both wearing sportswear. The {} has well-developed muscles, especially the muscles on {} arms, which are very large. ".format(call_1, call_2, call_1, with_1)
+            prompt = "A {} stands on the left and a {} stands on the right, both wearing sportswear. The {} has well-developed muscles, especially the muscles on {} arms, which are very large. ".format(call_1, call_2, call_1, with_1)
             prompt = prompt + "The {} is standing next to the {}, and {} muscles are also well-developed, with very large muscles on {} arms. ".format(call_2, call_1, with_2, with_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
@@ -169,7 +169,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} and a {} stood on the beach. The setting sun served as the background to illuminate them. The {} embraced the {} intimately and tenderly. The scene was filled with a romantic atmosphere. ".format(call_1, call_2, call_1, call_2)
+            prompt = "On the beach, A {} stood on the left and a {} stood on the right. The setting sun served as the background to illuminate them. The {} embraced the {} intimately and tenderly. The scene was filled with a romantic atmosphere. ".format(call_1, call_2, call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 奖杯: A man in a blue and white racing suit and a woman in a red and white racing suit were standing side by side, holding hands and jointly holding a grand trophy. The man is in the <img><|image_1|></img> and the woman is in the <img><|image_2|></img>.
@@ -177,7 +177,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} in a blue and white racing suit and a {} in a red and white racing suit were standing side by side, holding hands and jointly holding a grand trophy. " .format(call_1, call_2)
+            prompt = "A {} stood on the left in a blue and white racing suit and a {} stood on the right in a red and white racing suit, holding hands and jointly holding a grand trophy. " .format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 埃及：A man and a woman stand in front of an ancient Egyptian temple, bathed in the golden sunlight.
@@ -188,7 +188,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} and a {} stand in front of an ancient Egyptian temple, bathed in the golden sunlight. ".format(call_1, call_2)
+            prompt = "A {} stands on the left and a {} stands on the right, in front of an ancient Egyptian temple, bathed in the golden sunlight. ".format(call_1, call_2)
             if info_1["gender"] != info_2["gender"]:
                 prompt = prompt + "The man is tall and strong, with long golden brown hair tied into a low ponytail, wearing a white knee-length skirt, a wide gold belt around his waist, and gold ornaments on his arms, with a majestic temperament. "
                 prompt = prompt + "The woman has black hair that reaches her shoulders, and her eyeliner outlines her mysterious charm. She wears a close-fitting white dress and a gold collar with sapphires around her neck, just like an ancient Egyptian queen. "
@@ -246,7 +246,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "The {} and the {} stood together, smiling towards the camera. The background was a serene outdoor scene, with a vintage red sports car behind them, neatly trimmed green plants and a white fence. ".format(call_1, call_2)
+            prompt = "The {} stood on the left and the {} stood on the right, smiling towards the camera. The background was a serene outdoor scene, with a vintage red sports car behind them, neatly trimmed green plants and a white fence. ".format(call_1, call_2)
             prompt = prompt + "The sunlight poured in, creating a warm and romantic atmosphere. The overall picture exuded the charm of retro style and the sweet atmosphere of love. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
@@ -271,7 +271,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "The {} and the {} stood together, behind them was a huge floor-to-ceiling window, and outside the window were skyscrapers with neon lights twinkling. ".format(call_1, call_2)
+            prompt = "The {} stood on the left and the {} stood on the right, behind them was a huge floor-to-ceiling window, and outside the window were skyscrapers with neon lights twinkling. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 敞篷车：A man and a woman were sitting in a red sports car.
@@ -287,7 +287,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} and a {}, both wearing white coats and with a stethoscope around their necks, stood inside a hospital. ".format(call_1, call_2)
+            prompt = "A {} stood on the left and a {} stood on the right, both wearing white coats and with a stethoscope around their necks, stood inside a hospital. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 雨中：Men and women stood on a street, the rain pouring down on them, their clothes soaked.
@@ -295,7 +295,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "The {} and the {} stood on a street, the rain pouring down on them, their clothes soaked. ".format(call_1, call_2)
+            prompt = "On a street, the {} stands on the left and the {} stands on the right, the rain pouring down on them, their clothes soaked. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 骑马：A woman is riding a horse.
@@ -323,7 +323,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} and a {} stood together under the Eiffel Tower and the cherry blossom trees. ".format(call_1, call_2)
+            prompt = "A {} stands on the left and a {} stands on the right, under the Eiffel Tower and the cherry blossom trees. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 壁咚：The man and the woman are standing together. There is a wall beside the woman.
@@ -331,7 +331,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "The {} and the {} are standing together. ".format(call_1, call_2)
+            prompt = "The {} stands on the left and the {} stands on the right. ".format(call_1, call_2)
             if info_1["gender"] == "M" and info_2["gender"] == "M":
                 prompt = prompt + "There is a wall beside the {}. " .format(call_1)
             else:
@@ -345,7 +345,7 @@ def generate_prompt(image_file1, image_file2, template):
         elif info_1["gender"] == info_2["gender"]:
             prompt = ""
         else:
-            prompt = "The woman is pregnant and the man is standing beside her. "
+            prompt = "The pregnant woman stands on the right, and the man stands on the left. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 海底：This is a photo taken from the seabed. A couple of people are in the blue underwater world. The man is gently embracing the woman.
@@ -355,7 +355,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "This is a photo taken from the seabed. A couple of people are in the blue underwater world. "
+            prompt = "This is a photo taken from the seabed. A couple of people are in the blue underwater world. The {} stands on the left and the {} stands on the right.".format(call_1, call_2)
             if info_1["gender"] == info_2["gender"]:
                 prompt = prompt + "The {} is gently embracing the {}. ".format(call_1, call_2)
             else:
@@ -369,7 +369,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} and a {} stand together, with the background being the blue sky and white clouds outside. ".format(call_1, call_2)
+            prompt = "A {} stands on the left and a {} stands on the right, with the background being the blue sky and white clouds outside. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 礼物：A man and a woman stand together.
@@ -377,7 +377,7 @@ def generate_prompt(image_file1, image_file2, template):
         if len(call_1) == 0 or len(call_2) == 0:
             prompt = ""
         else:
-            prompt = "A {} and a {} stand together. ".format(call_1, call_2)
+            prompt = "A {} stands on the left and a {} stands on the right. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
 
     # 麦克风：A woman was standing on a podium, with a microphone in front of her.
@@ -578,6 +578,16 @@ def generate_prompts_styleme(image_file, template):
     return prompts
 
 def inference_onmigen(prompt, input_images, height, width):
+    if prompt == "":
+        return None
+
+    if prompt in ["pet", "cheetah", "horse", "kangaroo", "microphone", "elephant", "cartoon", "lizard", "identification", "workplace", "exotic"]:
+        correct_faces = 1
+    elif prompt == "photo":
+        correct_faces = 3
+    else:
+        correct_faces = 2
+
     images = pipe(
         prompt=prompt,
         input_images=input_images,
@@ -589,7 +599,24 @@ def inference_onmigen(prompt, input_images, height, width):
         seed=0
     )
     image = images[0]
-    image.resize((width, height))
+    faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+    retry = 0
+    while(len(faces) != correct_faces):
+        images = pipe(
+            prompt=prompt,
+            input_images=input_images,
+            height=height//16*16,
+            width=width//16*16,
+            guidance_scale=3, #2.5
+            img_guidance_scale=1.6,
+            num_inference_steps=35,
+        )
+        image = images[0]
+        faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+        retry += 1
+        if retry > 5:
+            break
+    image = image.resize((width, height))
     return image
 
 

@@ -577,13 +577,13 @@ def generate_prompts_styleme(image_file, template):
             prompts.append(prompt)
     return prompts
 
-def inference_onmigen(prompt, input_images, height, width):
+def inference_onmigen(prompt, input_images, height, width, template):
     if prompt == "":
         return None
 
-    if prompt in ["pet", "cheetah", "horse", "kangaroo", "microphone", "elephant", "cartoon", "lizard", "identification", "workplace", "exotic"]:
+    if template in ["microphone", "cartoon", "identification", "workplace", "exotic"]:
         correct_faces = 1
-    elif prompt == "photo":
+    elif template == "photo":
         correct_faces = 3
     else:
         correct_faces = 2
@@ -601,7 +601,7 @@ def inference_onmigen(prompt, input_images, height, width):
     image = images[0]
     faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
     retry = 0
-    while(len(faces) != correct_faces):
+    while(len(faces) > correct_faces):
         images = pipe(
             prompt=prompt,
             input_images=input_images,
@@ -614,7 +614,7 @@ def inference_onmigen(prompt, input_images, height, width):
         image = images[0]
         faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
         retry += 1
-        if retry > 5:
+        if retry >= 5:
             break
     image = image.resize((width, height))
     return image
@@ -624,13 +624,22 @@ def inference_onmigen(prompt, input_images, height, width):
 
 
 if __name__ == "__main__":
+    template = "microphone"
+    input_images = ["./imgs/lw/facefun_muban/baozinvlang3.jpg"]
+    prompt = generate_prompt(input_images[0], "", template)
+    print(prompt)
+    height = 960
+    width = 720
+    image = inference_onmigen(prompt, input_images, height, width, template)
+    image.save("./imgs/sidatian/microphone-0403.png")
+
     template = "horse"
     input_images = ["./imgs/lw/facefun_muban/baozinvlang3.jpg", "./samples/horse.jpg"]
     prompt = generate_prompt(input_images[0], input_images[1], template)
     print(prompt)
     height = 960
     width = 720
-    image = inference_onmigen(prompt, input_images, height, width)
+    image = inference_onmigen(prompt, input_images, height, width, template)
     image.save("./imgs/sidatian/horse-0220.png")
 
     template = "kangaroo"
@@ -639,7 +648,7 @@ if __name__ == "__main__":
     print(prompt)
     height = 960
     width = 720
-    image = inference_onmigen(prompt, input_images, height, width)
+    image = inference_onmigen(prompt, input_images, height, width, template)
     image.save("./imgs/sidatian/kangaroo-0220.png")
 
     template = "elephant"
@@ -648,7 +657,7 @@ if __name__ == "__main__":
     print(prompt)
     height = 960
     width = 720
-    image = inference_onmigen(prompt, input_images, height, width)
+    image = inference_onmigen(prompt, input_images, height, width, template)
     image.save("./imgs/sidatian/elephant-0315.png")
 
     template = "photo"
@@ -657,7 +666,7 @@ if __name__ == "__main__":
     print(prompt)
     height = 960
     width = 720
-    image = inference_onmigen(prompt, input_images, height, width)
+    image = inference_onmigen(prompt, input_images, height, width, template)
     image.save("./imgs/sidatian/photo-0315.png")
 
     template = "exotic"
@@ -667,5 +676,5 @@ if __name__ == "__main__":
     prompts = generate_prompts_styleme(image_file, template)
     for index, prompt in enumerate(prompts):
         print(prompt)
-        image = inference_onmigen(prompt, [image_file], height, width)
+        image = inference_onmigen(prompt, [image_file], height, width, template)
         image.save(f"./imgs/sidatian/styleme-0312-{index}.png")

@@ -8,7 +8,7 @@ from PIL import Image
 
 
 print("loading InsightFace ...")
-app = FaceAnalysis(providers=['CUDAExecutionProvider'], allowed_modules=['detection', 'genderage'])
+app = FaceAnalysis(providers=['CUDAExecutionProvider'], allowed_modules=['detection', 'recognition', 'genderage'])
 app.prepare(ctx_id=0, det_size=(640,640))
 print("loading OnmiGen ...")
 pipe = OmniGenPipeline.from_pretrained("Shitao/OmniGen-v1")
@@ -17,20 +17,20 @@ print("loading Success")
 
 def analysis_face(image_file):
     if len(image_file) == 0:
-        face_info = {"has_face": False, "gender": "", "age": -1}
+        face_info = {"has_face": False, "gender": "", "age": -1, "embedding": None}
     elif not os.path.isfile(image_file):
-        face_info = {"has_face": False, "gender": "", "age": -1}
+        face_info = {"has_face": False, "gender": "", "age": -1, "embedding": None}
     else:
         pil_image = Image.open(image_file).convert("RGB")
         np_image = np.array(pil_image)
         cv_image = cv2.cvtColor(np_image, cv2.COLOR_RGB2BGR)
         faces = app.get(cv_image)
         if len(faces) == 0:
-            face_info = {"has_face": False, "gender": "", "age": -1}
+            face_info = {"has_face": False, "gender": "", "age": -1, "embedding": None}
         else:
             faces = sorted(faces, key=lambda x: abs((x.bbox[2] - x.bbox[0]) * (x.bbox[3] - x.bbox[1])), reverse=True)
             face = faces[0]
-            face_info = {"has_face": True, "gender": face.sex, "age": face.age}
+            face_info = {"has_face": True, "gender": face.sex, "age": face.age, "embedding": face.embedding}
     return face_info
 
 
@@ -49,6 +49,19 @@ def info_call(face_info):
                 call = "boy"
     return call
 
+def get_face_similarity(face, infos):
+    def compute_emb_similarity(embedding1, embedding2):
+        if embedding1 is None or embedding2 is None:
+            similarity = -1
+        else:
+            similarity = np.dot(embedding1, embedding2) / (np.linalg.norm(embedding1) * np.linalg.norm(embedding2))
+        return similarity
+    max_similarity = -1
+    for info in infos:
+        similarity = compute_emb_similarity(face.embedding, info["embedding"])
+        if similarity > max_similarity:
+            max_similarity = similarity
+    return max_similarity
 
 def generate_prompt(image_file1, image_file2, template):
     template_list = [
@@ -588,31 +601,43 @@ def inference_onmigen(prompt, input_images, height, width, template):
     else:
         correct_faces = 2
 
+    img_guidance_scale = 1.6
     images = pipe(
         prompt=prompt,
         input_images=input_images,
         height=height//16*16, 
         width=width//16*16,
         guidance_scale=3, #2.5 
-        img_guidance_scale=1.6,
+        img_guidance_scale=img_guidance_scale,
         num_inference_steps=35,
         seed=0
     )
     image = images[0]
     faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+    input_infos = [analysis_face(input_image) for input_image in input_images]
+    faces_similarity = [get_face_similarity(face, input_infos) for face in faces]
+    faces_similarity = [face_similarity for face_similarity in faces_similarity if face_similarity > 0]
+    print(f"faces_gender: {[face.sex for face in faces]}")
+    print(f"faces_similarity: {faces_similarity}")
     retry = 0
-    while(len(faces) > correct_faces):
+    while(len(faces) > correct_faces or min(faces_similarity) < 0.25):
+        if min(faces_similarity) < 0.25:
+            img_guidance_scale += 0.2
         images = pipe(
             prompt=prompt,
             input_images=input_images,
             height=height//16*16,
             width=width//16*16,
             guidance_scale=3, #2.5
-            img_guidance_scale=1.6,
+            img_guidance_scale=img_guidance_scale,
             num_inference_steps=35,
         )
         image = images[0]
         faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+        faces_similarity = [get_face_similarity(face, input_infos) for face in faces]
+        faces_similarity = [face_similarity for face_similarity in faces_similarity if face_similarity > 0]
+        print(f"faces_gender: {[face.sex for face in faces]}")
+        print(f"faces_similarity: {faces_similarity}")
         retry += 1
         if retry >= 5:
             break

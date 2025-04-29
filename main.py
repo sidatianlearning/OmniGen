@@ -616,12 +616,11 @@ def inference_onmigen(prompt, input_images, height, width, template):
     faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
     input_infos = [analysis_face(input_image) for input_image in input_images]
     faces_similarity = [get_face_similarity(face, input_infos) for face in faces]
-    faces_similarity = [face_similarity for face_similarity in faces_similarity if face_similarity > 0]
     print(f"faces_gender: {[face.sex for face in faces]}")
     print(f"faces_similarity: {faces_similarity}")
     retry = 0
-    while(len(faces) > correct_faces or min(faces_similarity) < 0.25):
-        if min(faces_similarity) < 0.25:
+    while(len(faces) > correct_faces or len(faces_similarity) == 0 or min(faces_similarity) < 0.25):
+        if len(faces) == correct_faces and len(faces_similarity) > 0 and min(faces_similarity) < 0.25:
             img_guidance_scale += 0.2
         images = pipe(
             prompt=prompt,
@@ -635,7 +634,6 @@ def inference_onmigen(prompt, input_images, height, width, template):
         image = images[0]
         faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
         faces_similarity = [get_face_similarity(face, input_infos) for face in faces]
-        faces_similarity = [face_similarity for face_similarity in faces_similarity if face_similarity > 0]
         print(f"faces_gender: {[face.sex for face in faces]}")
         print(f"faces_similarity: {faces_similarity}")
         retry += 1
@@ -643,7 +641,6 @@ def inference_onmigen(prompt, input_images, height, width, template):
             break
     image = image.resize((width, height))
     return image
-
 
 
 
@@ -686,7 +683,7 @@ if __name__ == "__main__":
     image.save("./imgs/sidatian/elephant-0315.png")
 
     template = "photo"
-    input_images = ["./imgs/lw/facefun-0313/1.png", "./imgs/lw/facefun-0313/4.jpg", "./imgs/lw/facefun-0313/6.jpg"]
+    input_images = ["./imgs/lw/facefun-0417/4.jpg", "./imgs/lw/facefun-0417/3.jpg", "./imgs/lw/facefun-0417/33.jpg"]
     prompt = generate_prompt_for_3(input_images[0], input_images[1], input_images[2], template)
     print(prompt)
     height = 960

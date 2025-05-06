@@ -67,10 +67,10 @@ def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
         "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone",
-        "elephant", "cartoon", "lizard"]
+        "elephant", "cartoon", "lizard", "snowflakes"]
     assert template in template_list, (
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
-        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, cartoon, lizard)"
+        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, cartoon, lizard, snowflakes)"
     )
 
     info_1 = analysis_face(image_file1)
@@ -424,6 +424,14 @@ def generate_prompt(image_file1, image_file2, template):
         else:
             prompt = "This {} is standing on the African savannah, holding a huge and brightly-colored lizard in his arms. ".format(call_1)
             prompt = prompt + "The {} is in the <img><|image_1|></img>.".format(call_1)
+
+    # 雪中kiss：A man and a woman stand together, with snowflakes falling behind them.
+    elif template == "snowflakes":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} stands on the left and a {} stands on the right, with snowflakes falling behind them. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
     return prompt
 
 def generate_prompt_for_3(image_file1, image_file2, image_file3, template):
@@ -681,6 +689,15 @@ if __name__ == "__main__":
     width = 720
     image = inference_onmigen(prompt, input_images, height, width, template)
     image.save("./imgs/sidatian/elephant-0315.png")
+
+    template = "snowflakes"
+    input_images = ["./imgs/lw/facefun-0417/4.jpg", "./imgs/lw/facefun-0417/3.jpg"]
+    prompt = generate_prompt(input_images[0], input_images[1], template)
+    print(prompt)
+    height = 960
+    width = 720
+    image = inference_onmigen(prompt, input_images, height, width, template)
+    image.save("./imgs/sidatian/snowflakes-0506.png")
 
     template = "photo"
     input_images = ["./imgs/lw/facefun-0417/4.jpg", "./imgs/lw/facefun-0417/3.jpg", "./imgs/lw/facefun-0417/33.jpg"]

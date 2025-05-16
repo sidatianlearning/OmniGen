@@ -67,10 +67,10 @@ def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
         "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone",
-        "elephant", "cartoon", "lizard", "snowflakes"]
+        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora"]
     assert template in template_list, (
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
-        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, cartoon, lizard, snowflakes)"
+        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, cartoon, lizard, snowflakes, fireworks, aurora)"
     )
 
     info_1 = analysis_face(image_file1)
@@ -431,6 +431,28 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = ""
         else:
             prompt = "A {} stands on the left and a {} stands on the right, with snowflakes falling behind them. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+    
+    # 烟花亲吻：A man and a woman stand together, with the characters in the center of the picture. 
+    #           The sky behind them presents a colorful fireworks show. 
+    #           In the night sky, golden, white, pink, and orange fireworks bloom in various shapes: some are as bright as blooming flowers, some are like trailing meteors, and some are scattered into dots of light. 
+    #           The light of the fireworks is particularly dazzling against the dark night sky, and the smoke in the air adds a hazy beauty.
+    elif template == "fireworks":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} stands on the left and a {} stands on the right, with the characters in the center of the picture. ".format(call_1, call_2)
+            prompt = prompt + "The sky behind them presents a colorful fireworks show. "
+            prompt = prompt + "In the night sky, golden, white, pink, and orange fireworks bloom in various shapes: some are as bright as blooming flowers, some are like trailing meteors, and some are scattered into dots of light. "
+            prompt = prompt + "The light of the fireworks is particularly dazzling against the dark night sky, and the smoke in the air adds a hazy beauty. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 极光亲吻：A man and a woman stand together, with beautiful colorful aurora and snow-capped mountains behind them.
+    elif template == "aurora":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} stands on the left and a {} stands on the right, with beautiful colorful aurora and snow-capped mountains behind them. ".format(call_1, call_2)
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
     return prompt
 

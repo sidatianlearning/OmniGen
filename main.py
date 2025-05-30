@@ -67,10 +67,11 @@ def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
         "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone",
-        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora"]
+        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football"]
     assert template in template_list, (
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
-        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, cartoon, lizard, snowflakes, fireworks, aurora)"
+        f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, "
+        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football)"
     )
 
     info_1 = analysis_face(image_file1)
@@ -453,6 +454,33 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = ""
         else:
             prompt = "A {} stands on the left and a {} stands on the right, with beautiful colorful aurora and snow-capped mountains behind them. ".format(call_1, call_2)
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 玉米地：A man and a woman stand together, with a cornfield in the background. In the background, the corn plants are tall, some of their leaves have turned yellow, and dry corn stalks are scattered on the ground.
+    elif template == "cornfield":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} stands on the left and a {} stands on the right, with a cornfield in the background. ".format(call_1, call_2)
+            prompt = prompt + "In the background, the corn plants are tall, some of their leaves have turned yellow, and dry corn stalks are scattered on the ground. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 马棚：A man and a woman are standing together, with an American stable in the background. With a wooden frame, there is a brown horse behind the two people.
+    elif template == "stable":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} stands on the left and a {} stands on the right, with an American stable in the background. ".format(call_1, call_2)
+            prompt = prompt + "With a wooden frame, there is a brown horse behind the two people. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 橄榄球：A man and a woman stand together, with a large open-air stadium in the background. Under the blue sky and white clouds, the spectator stands surround the green American football field layer upon layer.
+    elif template == "football":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} stands on the left and a {} stands on the right, with a large open-air stadium in the background. ".format(call_1, call_2)
+            prompt = prompt + "Under the blue sky and white clouds, the spectator stands surround the green American football field layer upon layer. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
     return prompt
 

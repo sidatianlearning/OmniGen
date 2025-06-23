@@ -67,11 +67,11 @@ def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
         "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone",
-        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football"]
+        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football", "toolroom"]
     assert template in template_list, (
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
         f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, "
-        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football)"
+        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football, toolroom)"
     )
 
     info_1 = analysis_face(image_file1)
@@ -481,6 +481,15 @@ def generate_prompt(image_file1, image_file2, template):
         else:
             prompt = "A {} stands on the left and a {} stands on the right, with a large open-air stadium in the background. ".format(call_1, call_2)
             prompt = prompt + "Under the blue sky and white clouds, the spectator stands surround the green American football field layer upon layer. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 工具房：A man and a woman are standing together. The background is a tool room. Tools such as pliers, wrenches and saws are hung on the wall, and there is a toolbox behind them.
+    elif template == "toolroom":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} stands on the left and a {} stands on the right. ".format(call_1, call_2)
+            prompt = prompt + "The background is a tool room. Tools such as pliers, wrenches and saws are hung on the wall, and there is a toolbox behind them. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
     return prompt
 

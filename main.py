@@ -8,8 +8,10 @@ from PIL import Image
 
 
 print("loading InsightFace ...")
-app = FaceAnalysis(providers=['CUDAExecutionProvider'], allowed_modules=['detection', 'recognition', 'genderage'])
-app.prepare(ctx_id=0, det_size=(640,640))
+app_user = FaceAnalysis(providers=['CUDAExecutionProvider'], allowed_modules=['detection', 'recognition', 'genderage'])
+app_user.prepare(ctx_id=0, det_size=(640,640), det_thresh=0.04)
+app_gen = FaceAnalysis(providers=['CUDAExecutionProvider'], allowed_modules=['detection', 'recognition', 'genderage'])
+app_gen.prepare(ctx_id=0, det_size=(640,640))
 print("loading OnmiGen ...")
 pipe = OmniGenPipeline.from_pretrained("Shitao/OmniGen-v1")
 print("loading Success")
@@ -24,7 +26,7 @@ def analysis_face(image_file):
         pil_image = Image.open(image_file).convert("RGB")
         np_image = np.array(pil_image)
         cv_image = cv2.cvtColor(np_image, cv2.COLOR_RGB2BGR)
-        faces = app.get(cv_image)
+        faces = app_user.get(cv_image)
         if len(faces) == 0:
             face_info = {"has_face": False, "gender": "", "age": -1, "embedding": None}
         else:
@@ -680,7 +682,7 @@ def inference_onmigen(prompt, input_images, height, width, template):
         seed=0
     )
     image = images[0]
-    faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+    faces = app_gen.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
     input_infos = [analysis_face(input_image) for input_image in input_images]
     faces_similarity = [get_face_similarity(face, input_infos) for face in faces]
     print(f"faces_gender: {[face.sex for face in faces]}")
@@ -699,7 +701,7 @@ def inference_onmigen(prompt, input_images, height, width, template):
             num_inference_steps=35,
         )
         image = images[0]
-        faces = app.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
+        faces = app_gen.get(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))
         faces_similarity = [get_face_similarity(face, input_infos) for face in faces]
         print(f"faces_gender: {[face.sex for face in faces]}")
         print(f"faces_similarity: {faces_similarity}")

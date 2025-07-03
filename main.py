@@ -69,11 +69,11 @@ def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
         "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone",
-        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football", "toolroom"]
+        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football", "toolroom", "openairmarket", "rainforest"]
     assert template in template_list, (
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
         f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, "
-        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football, toolroom)"
+        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football, toolroom, openairmarket, rainforest)"
     )
 
     info_1 = analysis_face(image_file1)
@@ -492,6 +492,34 @@ def generate_prompt(image_file1, image_file2, template):
         else:
             prompt = "A {} stands on the left and a {} stands on the right. ".format(call_1, call_2)
             prompt = prompt + "The background is a tool room. Tools such as pliers, wrenches and saws are hung on the wall, and there is a toolbox behind them. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 露天市场：A man and a woman stand side by side in an open-air market in Africa. The sun shines through the gaps in the green sunshade above their heads, casting mottled light and shadows on them. 
+    #           Surrounding them are noisy streets, stalls lined with colorful clothes, and cartons, plastic bags and cargo packages scattered on the ground. 
+    #           The two stand in the middle of a slightly open alley, not far away from them is a motorcycle and several cargo boxes waiting to be moved. 
+    #           In the background are pedestrians shuttling back and forth, vendors hawking and dogs wandering around casually. 
+    #           The whole picture is rich in color and warm in atmosphere, showing the unique chaotic vitality and life atmosphere of the African market.
+    elif template == "openairmarket":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} and a {} stand side by side in an open-air market in Africa. ".format(call_1, call_2)
+            prompt = prompt + "The sun shines through the gaps in the green sunshade above their heads, casting mottled light and shadows on them. "
+            prompt = prompt + "Surrounding them are noisy streets, stalls lined with colorful clothes, and cartons, plastic bags and cargo packages scattered on the ground. "
+            prompt = prompt + "The two stand in the middle of a slightly open alley, not far away from them is a motorcycle and several cargo boxes waiting to be moved. "
+            prompt = prompt + "In the background are pedestrians shuttling back and forth, vendors hawking and dogs wandering around casually. "
+            prompt = prompt + "The whole picture is rich in color and warm in atmosphere, showing the unique chaotic vitality and life atmosphere of the African market. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+    
+    # 下雨雨林：A man and a woman were standing together. It was raining heavily. The background was a thick tropical rainforest, surrounded by tall green plants with luxuriant leaves and various shapes. 
+    #           There was a babbling brook on the ground and a small waterfall could be seen in the distance.
+    elif template == "rainforest":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        else:
+            prompt = "A {} stood on the left and a {} stood on the right. ".format(call_1, call_2)
+            prompt = prompt + "It was raining heavily. The background was a thick tropical rainforest, surrounded by tall green plants with luxuriant leaves and various shapes. "
+            prompt = prompt + "There was a babbling brook on the ground and a small waterfall could be seen in the distance. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
     return prompt
 

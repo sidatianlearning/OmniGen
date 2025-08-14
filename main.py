@@ -69,11 +69,11 @@ def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
         "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone",
-        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football", "toolroom", "openairmarket", "rainforest"]
+        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football", "toolroom", "openairmarket", "rainforest", "spiderman"]
     assert template in template_list, (
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
         f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, "
-        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football, toolroom, openairmarket, rainforest)"
+        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football, toolroom, openairmarket, rainforest, spiderman)"
     )
 
     info_1 = analysis_face(image_file1)
@@ -520,6 +520,18 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = "A {} stood on the left and a {} stood on the right. ".format(call_1, call_2)
             prompt = prompt + "It was raining heavily. The background was a thick tropical rainforest, surrounded by tall green plants with luxuriant leaves and various shapes. "
             prompt = prompt + "There was a babbling brook on the ground and a small waterfall could be seen in the distance. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+
+    # 蜘蛛侠：A man, wearing a red and black mesh bodysuit, leaps onto the ground, holding hands with a woman and a spider web with the other. 
+    #           The woman stands next to him. The background is a vibrant, cinematic backdrop of New York skyscrapers.
+    elif template == "spiderman":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        elif info_1["gender"] == info_2["gender"]:
+            prompt = ""
+        else:
+            prompt = "A man, wearing a red and black mesh bodysuit, leaps onto the ground, holding hands with a woman and a spider web with the other. "
+            prompt = prompt + "The woman stands next to him. The background is a vibrant, cinematic backdrop of New York skyscrapers. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
     return prompt
 

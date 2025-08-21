@@ -69,11 +69,11 @@ def generate_prompt(image_file1, image_file2, template):
     template_list = [
         "standing", "wedding", "graduation", "pet", "rock", "photograph", "broom", "cheetah", "muscles", "beach", "trophy", "egyptian", "balloons",
         "titanic", "redcar", "brazil", "wallstreet", "convertible", "doctor", "rain", "horse", "kangaroo", "eiffeltower", "wall", "pregnant", "seabed", "mother", "gift", "microphone",
-        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football", "toolroom", "openairmarket", "rainforest", "spiderman"]
+        "elephant", "cartoon", "lizard", "snowflakes", "fireworks", "aurora", "cornfield", "stable", "football", "toolroom", "openairmarket", "rainforest", "spiderman", "aladdin"]
     assert template in template_list, (
         f"template {template} not in template_list(standing, wedding, graduation, pet, rock, photograph, broom, cheetah, muscles, beach, trophy, egyptian, balloons,"
         f"titanic, redcar, brazil, wallstreet, convertible, doctor, rain, horse, kangaroo, eiffeltower, wall, pregnant, seabed, mother, gift, microphone, elephant, "
-        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football, toolroom, openairmarket, rainforest, spiderman)"
+        f"cartoon, lizard, snowflakes, fireworks, aurora, cornfield, stable, football, toolroom, openairmarket, rainforest, spiderman, aladdin)"
     )
 
     info_1 = analysis_face(image_file1)
@@ -533,6 +533,22 @@ def generate_prompt(image_file1, image_file2, template):
             prompt = "A man, wearing a red and black mesh bodysuit, leaps onto the ground, holding hands with a woman and a spider web with the other. "
             prompt = prompt + "The woman stands next to him. The background is a vibrant, cinematic backdrop of New York skyscrapers. "
             prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
+    
+    # 阿拉丁：A man and a woman are sitting naturally on a gleaming magic carpet and flying in the air. 
+    #       The man is wearing a white shirt with red decorations, paired with a deep purple sleeveless vest, and white pants. The overall style has the characteristics of traditional Arab clothing. 
+    #       The woman is wearing a blue-green plunging top, paired with the same color pants, and is adorned with gold necklaces, earrings, etc. 
+    #       The clothing has bright colors. The background is a starry night sky and the distant city lights, with a full moon in the sky. The scene is filled with a romantic atmosphere.
+    elif template == "aladdin":
+        if len(call_1) == 0 or len(call_2) == 0:
+            prompt = ""
+        elif info_1["gender"] == info_2["gender"]:
+            prompt = ""
+        else:
+            prompt = "A man and a woman are sitting naturally on a gleaming magic carpet and flying in the air. "
+            prompt = prompt + "The man is wearing a white shirt with red decorations, paired with a deep purple sleeveless vest, and white pants. The overall style has the characteristics of traditional Arab clothing. "
+            prompt = prompt + "The woman is wearing a blue-green plunging top, paired with the same color pants, and is adorned with gold necklaces, earrings, etc. The clothing has bright colors. "
+            prompt = prompt + "The background is a starry night sky and the distant city lights, with a full moon in the sky. The scene is filled with a romantic atmosphere. "
+            prompt = prompt + "The {} is in the <img><|image_1|></img> and the {} is in the <img><|image_2|></img>.".format(call_1, call_2)
     return prompt
 
 def generate_prompt_for_3(image_file1, image_file2, image_file3, template):
@@ -818,3 +834,4 @@ if __name__ == "__main__":
         print(prompt)
         image = inference_onmigen(prompt, [image_file], height, width, template)
         image.save(f"./imgs/sidatian/styleme-0312-{index}.png")
+    

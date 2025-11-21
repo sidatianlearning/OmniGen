@@ -575,8 +575,8 @@ def generate_prompt_for_3(image_file1, image_file2, image_file3, template):
 
 
 def generate_prompts_styleme(image_file, template):
-    template_list = ["identification", "workplace", "exotic"]
-    assert template in template_list, f"template {template} not in template_list (identification, workplace, exotic)"
+    template_list = ["identification", "workplace", "exotic", "thanksgiving-lady", "thanksgiving-baby"]
+    assert template in template_list, f"template {template} not in template_list (identification, workplace, exotic, thanksgiving-lady, thanksgiving-baby)"
 
     info = analysis_face(image_file)
     call = info_call(info)
@@ -713,6 +713,80 @@ def generate_prompts_styleme(image_file, template):
                 f"The woman is in the <img><|image_1|></img>."
             )
             prompts.append(prompt)
+
+    # 感恩节女
+    # 女1：This photo depicts a festive scene filled with a warm atmosphere: A lady is wearing a red long-sleeved top, adorned with a delicate necklace, and smiling as she holds a beautifully plated golden-brown roasted turkey. 
+    #       Around the turkey are yellow mini pumpkins and green decorative dishes, along with some lemon slices. The background is a warm yellow light, and the other attendees of the party can be vaguely seen.
+    #       The overall scene creates a profound sense of warmth for the Thanksgiving family reunion, conveying a joyful and warm festive atmosphere.The woman is in the <img><|image_1|></img>.
+    # 女2：This photo is filled with a strong sense of the autumn harvest: A woman is wearing a white blouse, squatting in a pile of pumpkins, holding a round and orange large pumpkin with both hands, and her face is brimming with a bright smile.
+    #       Around her are various colors and sizes of pumpkins, including orange, light yellow and white. There are also wooden boxes with flowers and a red cart filled with fruits beside her. The background seems to be a pumpkin farm or market.
+    #       The overall picture is dominated by warm tones, conveying a leisurely and pleasant atmosphere of autumn picking, fully expressing the joy of harvest and the delightful enjoyment of the season. The woman is in the <img><|image_1|></img>.
+    # 女3：In the photo, the woman is wearing an orange coat and a white scarf. She is pushing a handcart filled with various pumpkins, standing beside the autumn fence path. The sunlight filters through the trees, casting dappled shadows on the ground.
+    #       Fallen leaves dot the ground, exuding a warm and festive atmosphere of harvest. The woman is in the <img><|image_1|></img>.
+    # 女4：Half-body photo. This photo creates a cozy autumn atmosphere: A lady is wearing a colorful chunky knitted hooded sweater, with warm yellow, red-brown, blue-gray and other tones interwoven, giving it a thick texture and a retro feel. 
+    #       She is holding a glass of white wine. The background is the golden autumn forest, with fallen leaves covering the ground.
+    #       The warm-toned light and shadow make the entire scene full of a lazy and leisurely autumn mood, as if enjoying an outdoor autumn bittersweet moment, conveying a relaxed and carefree sense of life. The woman is in the <img><|image_1|></img>.
+    elif template == "thanksgiving-lady":
+        prompt = (
+            f"This photo depicts a festive scene filled with a warm atmosphere: A {call} is wearing a red long-sleeved top, adorned with a delicate necklace, and smiling as {pronoun} holds a beautifully plated golden-brown roasted turkey. "
+            f"Around the turkey are yellow mini pumpkins and green decorative dishes, along with some lemon slices. The background is a warm yellow light, and the other attendees of the party can be vaguely seen. "
+            f"The overall scene creates a profound sense of warmth for the Thanksgiving family reunion, conveying a joyful and warm festive atmosphere. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"This photo is filled with a strong sense of the autumn harvest: A {call} is wearing a white blouse, squatting in a pile of pumpkins, holding a round and orange large pumpkin with both hands, and {possessive} face is brimming with a bright smile."
+            f"Around {with_} are various colors and sizes of pumpkins, including orange, light yellow and white. There are also wooden boxes with flowers and a red cart filled with fruits beside {with_}. The background seems to be a pumpkin farm or market. "
+            f"The overall picture is dominated by warm tones, conveying a leisurely and pleasant atmosphere of autumn picking, fully expressing the joy of harvest and the delightful enjoyment of the season. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"In the photo, the {call} is wearing an orange coat and a white scarf. {pronoun} is pushing a handcart filled with various pumpkins, standing beside the autumn fence path. The sunlight filters through the trees, casting dappled shadows on the ground. "
+            f"Fallen leaves dot the ground, exuding a warm and festive atmosphere of harvest. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"Half-body photo. This photo creates a cozy autumn atmosphere: A {call} is wearing a colorful chunky knitted hooded sweater, with warm yellow, red-brown, blue-gray and other tones interwoven, giving it a thick texture and a retro feel. "
+            f"{pronoun} is holding a glass of white wine. The background is the golden autumn forest, with fallen leaves covering the ground. "
+            f"The warm-toned light and shadow make the entire scene full of a lazy and leisurely autumn mood, as if enjoying an outdoor autumn bittersweet moment, conveying a relaxed and carefree sense of life. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)  
+
+    # 感恩节婴儿
+    # 婴儿1：This photo is filled with the warm and playful atmosphere of the autumn Thanksgiving. A baby is wearing a fluffy costume in the shape of a turkey, with a turkey hat adorned with colorful feathers on his head, sitting in a brown pot.
+    #       Surrounding him are orange pumpkins, colorful autumn leaves and bright flowers. On the brick wall in the background, there are various colors of pumpkins piled up.
+    #       The overall picture exudes a rich festive atmosphere, being both adorable and soothing.The baby is in the <img><|image_1|></img>.
+    # 婴儿2：The baby is wearing a white chef's hat and is dressed in a Thanksgiving-themed apron, which is decorated with elements such as autumn leaves and pumpkins. Holding a plate of roasted turkey, the baby fully demonstrates the festive participation.
+    #       The background is a kitchen, and the table is set with Thanksgiving delicacies like bell peppers, pumpkins, and mixed dishes, creating a warm scene of the family preparing the holiday feast together.The baby is in the <img><|image_1|></img>.
+    # 婴儿3：The baby is wearing an orange and brown checkered sweater, paired with brown trousers, an orange knitted cap (with pompoms), a scarf of the same color, and brown leather boots.
+    #       The overall style of the outfit is warm and full of autumn charm. The background is a cozy indoor family scene, with lit candles on the wooden dining table, orange and white pumpkins, and autumn leaves decorations.
+    #       In the distance, one can see family members sitting together, creating a very warm and united atmosphere.The baby is in the <img><|image_1|></img>.
+    # 婴儿4：The baby is dressed in a light-colored one-piece garment and is lying in a woven basket. Surrounding it are various colorful mini pumpkins in shades of orange, white, and green.
+    #       The bottom of the basket is covered with white fabric, and the background resembles a white plush material. The scene is warm and gentle.The baby is in the <img><|image_1|></img>.
+    elif template == "thanksgiving-baby":
+        if info["age"] <= 5:
+            call = "baby"
+        prompt = (
+            f"This photo is filled with the warm and playful atmosphere of the autumn Thanksgiving. A {call} is wearing a fluffy costume in the shape of a turkey, with a turkey hat adorned with colorful feathers on {possessive} head, sitting in a brown pot. "
+            f"Surrounding {with_} are orange pumpkins, colorful autumn leaves and bright flowers. On the brick wall in the background, there are various colors of pumpkins piled up. "
+            f"The overall picture exudes a rich festive atmosphere, being both adorable and soothing. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"The {call} is wearing a white chef's hat and is dressed in a Thanksgiving-themed apron, which is decorated with elements such as autumn leaves and pumpkins. Holding a plate of roasted turkey, the {call} fully demonstrates the festive participation. "
+            f"The background is a kitchen, and the table is set with Thanksgiving delicacies like bell peppers, pumpkins, and mixed dishes, creating a warm scene of the family preparing the holiday feast together. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"The {call} is wearing an orange and brown checkered sweater, paired with brown trousers, an orange knitted cap (with pompoms), a scarf of the same color, and brown leather boots. "
+            f"The overall style of the outfit is warm and full of autumn charm. The background is a cozy indoor family scene, with lit candles on the wooden dining table, orange and white pumpkins, and autumn leaves decorations."
+            f"In the distance, one can see family members sitting together, creating a very warm and united atmosphere.The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"The {call} is dressed in a light-colored one-piece garment and is lying in a woven basket. Surrounding it are various colorful mini pumpkins in shades of orange, white, and green. "
+            f"The bottom of the basket is covered with white fabric, and the background resembles a white plush material. The scene is warm and gentle. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
     return prompts
 
 def inference_onmigen(prompt, input_images, height, width, template):

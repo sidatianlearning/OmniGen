@@ -575,8 +575,8 @@ def generate_prompt_for_3(image_file1, image_file2, image_file3, template):
 
 
 def generate_prompts_styleme(image_file, template):
-    template_list = ["identification", "workplace", "exotic", "thanksgiving-lady", "thanksgiving-baby"]
-    assert template in template_list, f"template {template} not in template_list (identification, workplace, exotic, thanksgiving-lady, thanksgiving-baby)"
+    template_list = ["identification", "workplace", "exotic", "thanksgiving-lady", "thanksgiving-baby", "christmas"]
+    assert template in template_list, f"template {template} not in template_list (identification, workplace, exotic, thanksgiving-lady, thanksgiving-baby, christmas)"
 
     info = analysis_face(image_file)
     call = info_call(info)
@@ -787,6 +787,37 @@ def generate_prompts_styleme(image_file, template):
             f"The bottom of the basket is covered with white fabric, and the background resembles a white plush material. The scene is warm and gentle. The {call} is in the <img><|image_1|></img>."
         )
         prompts.append(prompt)
+    
+    # 圣诞节
+    # 圣诞1：This is a close-up of a woman dressed for Christmas. The woman is wearing a red coat. In the picture, we can see that she is wearing a brown antler headpiece. She is holding a Christmas crystal ball in her hand. On the background, there are red decorative balls and silver metal ribbons scattered on the Christmas tree, and faintly, there are festive light strings with warm light, including a Christmas tree. All these elements together create a lively and warm festive atmosphere, which is a dynamic detail in the holiday decoration.
+    # 圣诞2：This photo is imbued with a sweet and cozy Christmas feeling: the woman in the picture is wearing a Santa hat, which makes her expression even more lively and charming. She's wearing a soft red sweater and holding a Christmas gift box in her hands, smiling.The background is outdoors, in the snow, with a Christmas tree decorated with red and gold ornaments and warm string lights. A soft glow fills the scene with a warm festive atmosphere, creating an overall relaxed and comforting feeling.
+    # 圣诞3：This photo is imbued with a sweet and cozy Christmas feeling: the woman in the picture is wearing a green Christmas hat, which makes her look even more lively and adorable. She's wearing a soft red sweater and holding two small Christmas trees in her hands, smiling.The background is indoors, featuring a Christmas tree decorated with red and gold ornaments and warm string lights.  Some gifts are hanging on the tree, and a soft glow fills the scene with a warm, festive atmosphere. The overall feeling is relaxed and comforting.
+    # 圣诞4：This photo is wrapped in a sweet and soft Christmas warmth: In the frame, the woman wears antler hair accessories with fluffy inner ears, which makes her look even more lively and adorable. She is dressed in a soft and cozy red sweater, holds two red-and-white striped lollipops (in the style of mini candy canes) in both hands, and is smiling gently.In the background, a Christmas tree decorated with red and gold ornaments and warm fairy lights glows with a soft halo, which is filled with the festive warmth. The overall atmosphere is relaxed and soothing.
+    elif template == "christmas":
+        prompt = (
+            f"This is a close-up of a {call} dressed for Christmas. The {call} is wearing a red coat. In the picture, we can see that {pronoun} is wearing a brown antler headpiece. "
+            f"{pronoun} is holding a Christmas crystal ball in {possessive} hand. On the background, there are red decorative balls and silver metal ribbons scattered on the Christmas tree, and faintly, there are festive light strings with warm light, including a Christmas tree. "
+            f"All these elements together create a lively and warm festive atmosphere, which is a dynamic detail in the holiday decoration. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"This photo is imbued with a sweet and cozy Christmas feeling: the {call} in the picture is wearing a Santa hat, which makes {possessive} expression even more lively and charming. "
+            f"{pronoun}'s wearing a soft red sweater and holding a Christmas gift box in {possessive} hands, smiling. The background is outdoors, in the snow, with a Christmas tree decorated with red and gold ornaments and warm string lights. "
+            f"A soft glow fills the scene with a warm festive atmosphere, creating an overall relaxed and comforting feeling. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"This photo is imbued with a sweet and cozy Christmas feeling: the {call} in the picture is wearing a green Christmas hat, which makes {pronoun} look even more lively and adorable. "
+            f"{pronoun}'s wearing a soft red sweater and holding two small Christmas trees in {possessive} hands, smiling. The background is indoors, featuring a Christmas tree decorated with red and gold ornaments and warm string lights. "
+            f"Some gifts are hanging on the tree, and a soft glow fills the scene with a warm, festive atmosphere. The overall feeling is relaxed and comforting. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
+        prompt = (
+            f"This photo is wrapped in a sweet and soft Christmas warmth: In the frame, the {call} wears antler hair accessories with fluffy inner ears, which makes {pronoun} look even more lively and adorable. "
+            f"{pronoun} is dressed in a soft and cozy red sweater, holds two red-and-white striped lollipops (in the style of mini candy canes) in both hands, and is smiling gently. "
+            f"In the background, a Christmas tree decorated with red and gold ornaments and warm fairy lights glows with a soft halo, which is filled with the festive warmth. The overall atmosphere is relaxed and soothing. The {call} is in the <img><|image_1|></img>."
+        )
+        prompts.append(prompt)
     return prompts
 
 def inference_onmigen(prompt, input_images, height, width, template):
@@ -899,13 +930,13 @@ if __name__ == "__main__":
     image = inference_onmigen(prompt, input_images, height, width, template)
     image.save("./imgs/sidatian/photo-0315.png")
 
-    template = "exotic"
-    image_file = "./imgs/lw/styleme-0310/8.png"
+    template = "christmas"
+    image_file = "./imgs/lw/styleme-0310/20.jpg"
     height = 960
     width = 720
     prompts = generate_prompts_styleme(image_file, template)
     for index, prompt in enumerate(prompts):
         print(prompt)
         image = inference_onmigen(prompt, [image_file], height, width, template)
-        image.save(f"./imgs/sidatian/styleme-0312-{index}.png")
+        image.save(f"./imgs/sidatian/styleme-1205-{index}.png")
     
